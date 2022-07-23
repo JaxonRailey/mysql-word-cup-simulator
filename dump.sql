@@ -11,7 +11,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
     `id_team`
-    INT(11) PRIMARY KEY AUTO_INCREMENT,
+    INT(1) PRIMARY KEY AUTO_INCREMENT,
     `name` VARCHAR(255) DEFAULT NULL,
     `winner` INT(1) DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
@@ -59,10 +59,10 @@ INSERT INTO `team` (`name`) VALUES ('Costa Rica');
 
 DROP TABLE IF EXISTS `match`;
 CREATE TABLE `match` (
-    `team_1` INT(11),
-    `team_2` INT(11),
-    `score_1` INT(11),
-    `score_2` INT(11),
+    `team_1` INT(1),
+    `team_2` INT(1),
+    `score_1` INT(1),
+    `score_2` INT(1),
     `step` INT(1) DEFAULT 1,
     FOREIGN KEY(`team_1`) REFERENCES `team`(`id_team`)
         ON DELETE SET NULL
@@ -195,6 +195,7 @@ BEGIN
     FROM `gol`
     GROUP BY `id_team`
     ORDER BY `diff` DESC;
+
 END $$
 DELIMITER ;
 
