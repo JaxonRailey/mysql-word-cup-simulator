@@ -1,5 +1,6 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
+
 /*
  * Type: Table
  * Name: team
@@ -110,7 +111,6 @@ BEGIN
     DECLARE `j` INT DEFAULT 1;
     DECLARE `k` INT DEFAULT 1;
     DECLARE `s1` INT DEFAULT 0;
-    DECLARE `s2` INT DEFAULT 0;
     SET `j` = 1;
     SET `k` = (SELECT COUNT(*) FROM `team`) / 2;
     UPDATE `team` SET `winner` = NULL;
@@ -120,7 +120,6 @@ BEGIN
         SET `i` = 0;
         WHILE `i` < `totalRows` DO
             SET `s1` = FLOOR(RAND() * 5);
-            SET `s2` = FLOOR(RAND() * 5);
 
             -- generate a random match between two teams still competing
             INSERT INTO `match` (`team_1`, `team_2`, `score_1`, `score_2`, `step`)
@@ -196,7 +195,6 @@ BEGIN
     FROM `gol`
     GROUP BY `id_team`
     ORDER BY `diff` DESC;
-
 END $$
 DELIMITER ;
 
