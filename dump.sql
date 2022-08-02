@@ -1,6 +1,5 @@
 SET FOREIGN_KEY_CHECKS = 0;
 
-
 /*
  * Type: Table
  * Name: team
@@ -10,8 +9,7 @@ SET FOREIGN_KEY_CHECKS = 0;
 
 DROP TABLE IF EXISTS `team`;
 CREATE TABLE `team` (
-    `id_team`
-    INT(1) PRIMARY KEY AUTO_INCREMENT,
+    `id_team` INT(1) PRIMARY KEY AUTO_INCREMENT,
     `name` VARCHAR(255) DEFAULT NULL,
     `winner` INT(1) DEFAULT NULL
 ) ENGINE = InnoDB DEFAULT CHARSET = utf8;
@@ -83,14 +81,14 @@ CREATE TABLE `match` (
 DROP FUNCTION IF EXISTS `score`;
 DELIMITER $$
 CREATE FUNCTION `score`(`s1` INT(1))
-    RETURNS INT(1) NOT DETERMINISTIC
+    RETURNS INT(1)
+    READS SQL DATA NOT DETERMINISTIC
     BEGIN
         DECLARE `val` INT(1);
         SET `val` = `s1`;
         WHILE `val` = `s1` DO
             SET `val` = FLOOR(RAND() * 5);
         END WHILE;
-
         RETURN `val`;
     END $$
 DELIMITER ;
@@ -104,14 +102,14 @@ DELIMITER ;
  */
 
 DELIMITER $$
-CREATE OR REPLACE PROCEDURE `simulate`()
+DROP PROCEDURE IF EXISTS `simulate`;
+CREATE PROCEDURE `simulate`()
 BEGIN
     DECLARE `totalRows` INT DEFAULT 0;
     DECLARE `i` INT DEFAULT 0;
     DECLARE `j` INT DEFAULT 1;
     DECLARE `k` INT DEFAULT 1;
     DECLARE `s1` INT DEFAULT 0;
-    SET `j` = 1;
     SET `k` = (SELECT COUNT(*) FROM `team`) / 2;
     UPDATE `team` SET `winner` = NULL;
     TRUNCATE TABLE `match`;
@@ -161,7 +159,8 @@ BEGIN
     UPDATE `team` SET `winner` = 1 WHERE `winner` IS NULL;
 
     -- creates a temporary table with the sum of goals scored and conceded
-    CREATE OR REPLACE TEMPORARY TABLE `gol` AS
+    DROP TEMPORARY TABLE IF EXISTS `gol`;
+    CREATE TEMPORARY TABLE `gol` AS
     SELECT
         `team`.`id_team` AS `id_team`,
         `team`.`name` AS `name`,
@@ -195,7 +194,6 @@ BEGIN
     FROM `gol`
     GROUP BY `id_team`
     ORDER BY `diff` DESC;
-
 END $$
 DELIMITER ;
 
